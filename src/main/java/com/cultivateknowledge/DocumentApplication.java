@@ -18,6 +18,7 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import io.federecio.dropwizard.swagger.SwaggerDropwizard;
 
 import java.text.SimpleDateFormat;
 
@@ -59,6 +60,10 @@ public class DocumentApplication extends Application<DocumentServiceConfiguratio
 
         // Add index page
         env.jersey().register(new IndexResource());
+
+        // Delegate swagger api documentation set-up
+        SwaggerDropwizard swaggerDropwizard = new SwaggerDropwizard();
+        swaggerDropwizard.onRun(cfg, env, "localhost", 8080);
     }
 
 }

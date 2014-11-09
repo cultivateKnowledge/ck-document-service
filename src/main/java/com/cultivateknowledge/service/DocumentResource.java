@@ -4,6 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.cultivateknowledge.model.DocumentModel;
 import com.cultivateknowledge.model.DocumentRequest;
 import com.cultivateknowledge.service.db.DocumentDAO;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/document")
+@Api(value = "/document", description = "Find, create, update documents")
 @Produces(MediaType.APPLICATION_JSON)
 public class DocumentResource implements DocumentService {
     private final DocumentDAO dao;
@@ -27,6 +30,7 @@ public class DocumentResource implements DocumentService {
     @Override
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Find documents by ID", notes = "Provides ability to search by id or timeframe with paging support.", response = List.class)
     @Path("/{collection}/items")
     public List<DocumentModel> find(@PathParam("collection") String collection,
                                     @QueryParam("recordId") String recordId,
@@ -51,6 +55,7 @@ public class DocumentResource implements DocumentService {
     @Timed
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Add document")
     @Path("/item")
     public void add(DocumentModel document) {
         dao.create(document);
@@ -59,6 +64,7 @@ public class DocumentResource implements DocumentService {
     @Override
     @Timed
     @GET
+    @ApiOperation(value = "Find document by ID", response = DocumentModel.class)
     @Path("/{collection}/item/{recordId}")
     public DocumentModel get(@PathParam("collection") String collection, @PathParam("recordId") String recordId) {
         return dao.findOne(new DocumentRequest().setCollection(collection).setRecordId(recordId));
@@ -68,6 +74,7 @@ public class DocumentResource implements DocumentService {
     @Timed
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Update document")
     @Path("/{collection}/item/{recordId}")
     public void update(DocumentModel document) {
         dao.update(document);
