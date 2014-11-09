@@ -1,0 +1,28 @@
+mongoDB:
+    dbName: ck-doc-repo
+    connections:
+        - host: localhost
+          port: 27017
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 8080
+  adminConnectors:
+    - type: http
+      port: 8081
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+
+    # Sets the level for 'com.cultivateknowledge' to DEBUG.
+    com.cultivateknowledge: DEBUG
+
+  appenders:
+    - type: console
