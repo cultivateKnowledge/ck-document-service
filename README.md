@@ -3,12 +3,13 @@
 Contains:
 
 * Gradle based web service
-* Based on DropWizard
-* Uses jolokia for monitoring
+* Based on DropWizard 0.7.0
+* Uses Coda Hale Metrics for monitoring
 * Uses jacoco for code coverage
 * Uses Cucumber for BDD testing
 * Uses Swagger for API documentation and testing
 * Uses MongoDB for data storage
+* Uses MongoJack for Jackson/MongoDB model/query support
 
 <pre>java -Ddropwizard.config=./src/main/resources/appconfig.yml -jar ./build/libs/ck-document-service-0.1.0-fatJar.jar</pre>
 

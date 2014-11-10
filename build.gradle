@@ -14,10 +14,6 @@ repositories {
      mavenLocal()
 }
 
-configurations {
-    jolokia
-}
-
 jacoco {
     toolVersion = "0.7.1.201405082137"
 }
@@ -65,10 +61,6 @@ dependencies {
     compile 'com.squareup.dagger:dagger:1.1.0'
     compile 'com.squareup.dagger:dagger-compiler:1.1.0'
 
-    // Monitoring
-    runtime 'org.jolokia:jolokia-core:1.2.1'
-    jolokia 'org.jolokia:jolokia-jvm:1.2.1:agent'
-
     // Testing
     testCompile 'junit:junit:4.11'
     testCompile "org.mockito:mockito-core:1.9.5"
@@ -81,12 +73,7 @@ dependencies {
 }
 
 run {
-    systemProperty "com.sun.management.jmxremote", ""
-    systemProperty "com.sun.management.jmxremote.port", "9999"
-    systemProperty "com.sun.management.jmxremote.authenticate", "false"
-    systemProperty "com.sun.management.jmxremote.ssl", "false"
     systemProperty "dropwizard.config", "build/resources/main/appconfig.yml"
-    jvmArgs "-javaagent:${configurations.jolokia.iterator().next()}=port=7777,host=localhost"
 }
 
 // Fat Jar Creation

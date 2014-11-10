@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class DocumentRequest {
 
-    private String collection;
+    private String collectionId;
     private String recordId;
     private String entityId;
     private String fromDate;
@@ -15,12 +15,12 @@ public class DocumentRequest {
     private Integer pageSize;
     private String orderBy;
 
-    public String getCollection() {
-        return collection;
+    public String getCollectionId() {
+        return collectionId;
     }
 
-    public DocumentRequest setCollection(String collection) {
-        this.collection = collection;
+    public DocumentRequest setCollectionId(String collectionId) {
+        this.collectionId = collectionId;
         return this;
     }
 
@@ -94,8 +94,8 @@ public class DocumentRequest {
         }
         DocumentRequest other = (DocumentRequest) object;
         EqualsBuilder eb = new EqualsBuilder();
-        eb.append(this.collection, other.getRecordId());
-        eb.append(this.recordId, other.getCollection());
+        eb.append(this.collectionId, other.getRecordId());
+        eb.append(this.recordId, other.getCollectionId());
         eb.append(this.entityId, other.getEntityId());
         eb.append(this.fromDate, other.getFromDate());
         eb.append(this.untilDate, other.getUntilDate());
@@ -109,7 +109,7 @@ public class DocumentRequest {
     @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder(-975526215, 2047137945);
-        hcb.append(this.collection);
+        hcb.append(this.collectionId);
         hcb.append(this.recordId);
         hcb.append(this.entityId);
         hcb.append(this.fromDate);
@@ -124,7 +124,7 @@ public class DocumentRequest {
     @Override
     public String toString() {
         ToStringBuilder strBuilder = new ToStringBuilder(this);
-        strBuilder.append("collection", this.collection);
+        strBuilder.append("collection", this.collectionId);
         strBuilder.append("recordId", this.recordId);
         strBuilder.append("entityId", this.entityId);
         strBuilder.append("fromDate", this.fromDate);

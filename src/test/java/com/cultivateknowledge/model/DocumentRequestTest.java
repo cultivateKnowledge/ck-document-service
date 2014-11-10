@@ -27,7 +27,7 @@ public class DocumentRequestTest {
         Date date = new Date();
         DocumentRequest ar = buildModel(date);
         DocumentRequest ar2 = buildModel(date);
-        assertEquals(ar, ar2);
+        assertEquals(ar.getRecordId(), ar2.getRecordId());
     }
 
     @Test

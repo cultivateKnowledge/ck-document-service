@@ -20,8 +20,8 @@ public class DocumentConsumerResource {
 
     @Timed
     @GET
-    public String consume(@QueryParam("collection") String collection, @QueryParam("recordId") String recordId) {
-        DocumentModel document = documentAPI.get(collection, recordId);
-        return String.format("The service is saying: %s (id: %d)",  document.getRecordCreated(), document.getCollection());
+    public String consume(@QueryParam("collectionId") String collectionId, @QueryParam("recordId") String recordId) {
+        DocumentModel document = documentAPI.get(collectionId, recordId);
+        return String.format("The service is saying %s:%s",  document.getCollectionId(), document.getRecordId());
     }
 }

@@ -32,7 +32,7 @@ public class DocumentResource implements DocumentService {
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Find documents by ID", notes = "Provides ability to search by id or timeframe with paging support.", response = List.class)
     @Path("/{collection}/items")
-    public List<DocumentModel> find(@PathParam("collection") String collection,
+    public List<DocumentModel> find(@PathParam("collectionId") String collectionId,
                                     @QueryParam("recordId") String recordId,
                                     @QueryParam("entityId") String entityId,
                                     @QueryParam("from") String fromDate,
@@ -41,7 +41,7 @@ public class DocumentResource implements DocumentService {
                                     @QueryParam("pageSize") Integer pageSize,
                                     @QueryParam("orderBy") String orderBy) {
         return dao.find(new DocumentRequest()
-                .setCollection(collection)
+                .setCollectionId(collectionId)
                 .setRecordId(recordId)
                 .setEntityId(entityId)
                 .setFromDate(fromDate)
@@ -65,9 +65,9 @@ public class DocumentResource implements DocumentService {
     @Timed
     @GET
     @ApiOperation(value = "Find document by ID", response = DocumentModel.class)
-    @Path("/{collection}/item/{recordId}")
-    public DocumentModel get(@PathParam("collection") String collection, @PathParam("recordId") String recordId) {
-        return dao.findOne(new DocumentRequest().setCollection(collection).setRecordId(recordId));
+    @Path("/{collectionId}/item/{recordId}")
+    public DocumentModel get(@PathParam("collectionId") String collection, @PathParam("recordId") String recordId) {
+        return dao.findOne(new DocumentRequest().setCollectionId(collection).setRecordId(recordId));
     }
 
     @Override

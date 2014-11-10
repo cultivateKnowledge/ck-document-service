@@ -22,9 +22,9 @@ public class DocumentConsumerResourceTest {
     @Test
     public void testConsume() throws Exception {
         DocumentModel doc = new DocumentModel();
-        doc.setCollection("test");
+        doc.setCollectionId("test");
         doc.setRecordId("1234");
         when(apiClient.get("test", "1234")).thenReturn(doc);
-        assertEquals("The service is saying: ?", resource.consume("test", "1234"));
+        assertEquals("The service is saying test:1234", resource.consume("test", "1234"));
     }
 }

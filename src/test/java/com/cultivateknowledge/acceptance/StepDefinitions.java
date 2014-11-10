@@ -1,35 +1,68 @@
 package com.cultivateknowledge.acceptance;
 
-import com.cultivateknowledge.model.Belly;
+import com.cultivateknowledge.DocumentApplication;
+import com.cultivateknowledge.DocumentServiceConfiguration;
+import com.cultivateknowledge.client.DocumentAPI;
+import com.cultivateknowledge.model.DocumentModel;
+import com.google.common.io.Resources;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import feign.Feign;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
+import feign.jaxrs.JAXRSModule;
+
+import java.util.UUID;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 /**
  * Global step definitions for conditions laid out in feature files
- * https://thomassundberg.wordpress.com/2014/05/29/cucumber-jvm-hello-world/
  */
 public class StepDefinitions {
-    private Belly belly;
-    private int waitingTime;
+    private static DropwizardTestSupport<DocumentServiceConfiguration> service;
+    private static DocumentAPI documentAPI;
 
-    @Given("^I have (\\d+) cukes in my belly$")
-    public void i_have_cukes_in_my_belly(int cukes) throws Throwable {
-        belly = new Belly();
-        belly.eat(cukes);
+    @Before
+    public void setUp() throws Exception {
+        if(service==null){
+            service = new DropwizardTestSupport(DocumentApplication.class, Resources.getResource("appconfig.yml").getPath());
+            service.startIfRequired();
+            //Hack until @BeforeAll is properly supported by Cucumber-JVM
+            Runtime.getRuntime().addShutdownHook(new Thread(){
+                @Override
+                public void run() {
+                    service.stop();
+                }
+            });
+            Feign.Builder feignBuilder = Feign.builder()
+                    .contract(new JAXRSModule.JAXRSContract()) // we want JAX-RS annotations
+                    .encoder(new JacksonEncoder()) // we want Jackson because that's what Dropwizard uses already
+                    .decoder(new JacksonDecoder());
+            documentAPI = feignBuilder.target(DocumentAPI.class, "http://localhost:8080");
+        }
     }
 
-    @When("^I wait (\\d+) hour$")
-    public void i_wait_hour(int waitingTime) throws Throwable {
-        this.waitingTime = waitingTime;
+    DocumentModel documentModel;
+    @Given("^new document with collectionId = '(.*)'$")
+    public void new_document_with_json_x(String collectionId) throws Throwable {
+        DocumentModel documentModel = new DocumentModel();
+        documentModel.setCollectionId(collectionId);
+        documentModel.setRecordId(UUID.randomUUID().toString());
+        this.documentModel = documentModel;
     }
 
-    @Then("^my belly should (.*)$")
-    public void my_belly_should_growl(String expectedSound) throws Throwable {
-        String actualSound = belly.getSound(waitingTime);
-        assertThat(actualSound, is(expectedSound));
+    @When("^the create endpoint is called$")
+    public void the_create_endpoint() throws Throwable {
+        documentAPI.add(documentModel);
+    }
+
+    @Then("^a new record containing recordId is created$")
+    public void a_new_record_containing_recordId_is_created() throws Throwable {
+        DocumentModel createdDoc = documentAPI.get(documentModel.getCollectionId(), documentModel.getRecordId());
+        assertThat(createdDoc.getRecordId(), is(documentModel.getRecordId()));
     }
 }
